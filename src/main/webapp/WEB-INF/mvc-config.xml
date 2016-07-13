@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Uncomment and your base-package here: <context:component-scan base-package="org.springframework.samples.web"/> -->
+
+	
+       
+		<mvc:annotation-driven />
+		<context:annotation-config></context:annotation-config>
+		<context:component-scan base-package="com.spring"/>
+		
+ 		<bean id="ds" 
+			class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+			<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+			<property name="url"
+				value="jdbc:oracle:thin:@(DESCRIPTION=(LOAD_BALANCE=yes)(FAILOVER=ON)(ADDRESS=(PROTOCOL=TCP)(HOST=NVMNSDBD1.D2HAWKEYE.NET)(PORT=1521))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=d2he)))" />
+			<property name="username" value="i82717" />
+			<property name="password" value="oracle" />
+		</bean>
+
+		<bean id="jdbcTemplate" class="com.jdbcConnectionPool.JdbcConnection">
+			<property name="dataSource" ref="ds"></property>
+		</bean>
+		
+
+		<bean
+			class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+			<!-- Example: a logical view name of 'showMessage' is mapped to '/WEB-INF/jsp/showMessage.jsp' -->
+			<property name="prefix" value="/" />
+			<property name="suffix" value=".jsp" />
+		</bean>
+		<import resource="app-dao-config.xml"></import>
+
+</beans>
