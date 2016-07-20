@@ -1,21 +1,20 @@
 package com.spring.model;
 
-import org.hibernate.validator.constraints.NotEmpty;
+
 
 
 public class Login {
-	private int ID;
-	public int getID() {
-		return ID;
-	}
-	public void setID(int iD) {
-		ID = iD;
-	}
-	@NotEmpty(message="Please provide your UserID")
+	private int iD;
 	private String Id;
-	@NotEmpty(message="please provide your password")
 	private String Password;
 	private UserRole userRole;
+	public int getID() {
+		return iD;
+	}
+	public void setID(int iD) {
+		this.iD = iD;
+	}
+	
 	
 	public UserRole getUserRole() {
 		return userRole;

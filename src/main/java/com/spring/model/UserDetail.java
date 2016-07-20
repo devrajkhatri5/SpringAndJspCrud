@@ -1,12 +1,7 @@
 package com.spring.model;
-
-import java.util.Date;
-
 public class UserDetail {
 	private String userName;
 	private String sex;
-	private long mobileNumber;
-	private Date dateOfBirth;
 	private UserRole userRole;
 	private District district;
 	private State state;
@@ -56,23 +51,6 @@ public class UserDetail {
 
 	public void setSex(String sex) {
 		this.sex = sex;
-	}
-
-
-	public long getMobileNumber() {
-		return mobileNumber;
-	}
-
-	public Date getDateOfBirth() {
-		return dateOfBirth;
-	}
-
-	public void setMobileNumber(long mobileNumber) {
-		this.mobileNumber = mobileNumber;
-	}
-
-	public void setDateOfBirth(Date dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
 	}
 
 

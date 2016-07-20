@@ -14,7 +14,7 @@ public interface IUserInterface {
 
 	boolean deleteUser(int id);
 
-	UserDetail editUser(int Id);
+	boolean editUser(int id,String userID,String userName,String sex,String state,String role,String district );
 
 	ArrayList<UserDetail> getAllUsers();
 
@@ -25,6 +25,8 @@ public interface IUserInterface {
 	Map<Integer, String> getRoles();
 	
 	int getStateID(String stateName);
+	
+	int getRoleID(String userID);
 	
 
 }

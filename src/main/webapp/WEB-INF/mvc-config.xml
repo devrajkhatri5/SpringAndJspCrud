@@ -37,4 +37,7 @@
 		</bean>
 		<import resource="app-dao-config.xml"></import>
 
+    <mvc:resources mapping="/resources/**" location="/resources/"  
+	cache-period="31556926"/>
+
 </beans>

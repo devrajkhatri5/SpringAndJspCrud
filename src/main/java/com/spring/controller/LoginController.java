@@ -1,67 +1,57 @@
 package com.spring.controller;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.spring.DAO.UserServices;
-import com.spring.model.*;
+import com.spring.dao.UserServices;
+import com.spring.model.Login;
 
 @Controller
+@RequestMapping(value="/Home")
 public class LoginController {
 
 	@Autowired
 	private UserServices services;
 
 	@RequestMapping(value = "/Index", method = RequestMethod.GET)
-	public String getLoginForm(ModelMap model) throws Exception {
-		Map<Integer, String> roles = new HashMap<Integer, String>();
-		roles.putAll(services.getRoles());
-		model.addAttribute("roles", roles);
+	public String getLoginForm(){
+		
+		
 		return "View/Login";
+			
 	}
 
 	@RequestMapping(value = "/Login", method = RequestMethod.POST)
-	public ModelAndView Login(HttpServletRequest request, @Valid @ModelAttribute("Login") Login login,
-			BindingResult result) throws Exception {
-		
-		
-		if (result.hasErrors()) {
-			ModelAndView modelAndview = new ModelAndView("View/Login");
-			modelAndview.addObject("msg", "All field required");
-			return modelAndview;
-		}
-
-		int roleId = Integer.parseInt(((services.authenticateUser(login))));
-
-		if (roleId != login.getUserRole().getRoleId()) {
-			ModelAndView modelAndview = new ModelAndView("View/Login");
-			modelAndview
-					.addObject("msg", "Please select your appropriate role");
-			return modelAndview;
-		}
-
-		else if (roleId == login.getUserRole().getRoleId()) {
-			ModelAndView modelAndview = new ModelAndView("View/Welcome");
-			modelAndview.addObject("role", roleId);
+	public String login( @Valid @ModelAttribute("Login") Login login,
+			HttpSession session,final RedirectAttributes redirectAttributes) throws Exception {
+		int roleId = Integer.parseInt(services.authenticateUser(login));
+	 if(roleId==0){
+		redirectAttributes.addFlashAttribute("message","userid password  mismatched");
+		 return "redirect:Index";
+	 }else if (roleId != login.getUserRole().getRoleId()) {
 			
-			return modelAndview;
+			redirectAttributes.addFlashAttribute("message","Please Select  appropriate Role.");
+			 return "redirect:Index";	
+		}else if (roleId == login.getUserRole().getRoleId()) {
+			session.setAttribute("userId", login.getId());
+			redirectAttributes.addFlashAttribute("roleId",roleId);
+			return "redirect:Welcome";
+		}else{
+			throw new NullPointerException();
 		}
-
-		return new ModelAndView("View/Login");
+     
+		
+			
+	}
+	@RequestMapping(value = "/Welcome", method = RequestMethod.GET)
+	public String getWelcome() {
+		return "View/Welcome";
 	}
 
 }

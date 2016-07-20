@@ -8,18 +8,13 @@
 <title>Insert title here</title>
 </head>
 <body>
-<c:if test="${role==1}">
 <div align="center" style="margin-top: 100px;">
-<input type="submit" value="Add User" onclick="window.location.href='/CreateNewUser'" style="height:100px;width:200px;color:red;" />
-<input type="submit" value="View Details" onclick="window.location.href='/UserDetail?id=${role}'" style="height:100px;width:200px;color:red;"/>
-</div>
+<c:if test="${roleId==1}">
+<input type="submit" value="Add User" onclick="window.location.href='/Admin/CreateNewUser'" style="height:100px;width:200px;color:red;" />
 </c:if>
 
-<c:if test="${role==2}">
-<div align="center" style="margin-top: 100px;">
-<input type="submit" value="View Details" onclick="window.location.href='/UserDetail?id=${role}'" style="height:100px;width:200px;color:red;">
+<input type="submit" value="View Details" onclick="window.location.href='/Admin/UserDetail'" style="height:100px;width:200px;color:red;"/>
 </div>
-</c:if>
 
 </body>
 </html>

@@ -14,62 +14,50 @@
 </head>
 <body>
 
-	<form action="/AddUser" method="post">
+	<form Method="POST" action="AddUser" onsubmit="return validateForm()">
 		<div align="center" style="margin-top: 100px;">
-		<h1 style="color:grey">Add New User</h1>
+			<h1 style="color: grey">Add New User</h1>
 			<table>
+			<tr>
+			<td>${msg}</td></tr>
 				<tr>
+				
 					<td>UserID:</td>
-					<td><input type="text" type="text" name="login.Id"></td>
+					<td><input type="text" type="text" name="login.Id" id="userID"></td>
 				</tr>
 				<tr>
 					<td>UserName:</td>
-					<td><input type="text" type="text" name="userName"></td>
+					<td><input type="text" type="text" name="userName"
+						id="userName"></td>
 				</tr>
 				<tr>
 					<td>Password:</td>
 					<td><input id="password" type="text" type="text"
-						name="login.password"></td>
+						name="login.password" id="password"></td>
 				</tr>
+
 				<tr>
-					<td>Confirmpassword:</td>
-					<td><input id="confirmpasssword" type="text"
-						name="confirmPassword">
-						<p id="errorMessage"></p></td>
+					<td>Sex:</td>
+					<td><select name='sex' id="sex">
+							<option value=''>----please select---</option>
+							<option value='Male'>Male</option>
+							<option value='Female'>Female</option>
+					</select></td>
+
 				</tr>
-			<tr>
-			<td>Sex:</td>
-			<td>
-			<input type="radio" name="sex" value="Male">Male
-			<input type="radio" name="sex" value="Female">Female
 			
-			</td>
-			
-			</tr>
-				<tr>
-					<td>MobileNumber:</td>
-					<td><input type="text" type="text" name="mobileNumber"></td>
-				</tr>
-				<tr>
-					<td>Date of Birth</td>
-					<td><input type="text" type="text" name="dateOfBirth"></td>
-				</tr>
+				
 				<tr>
 					<td>Assign Role:</td>
-					<td><select name="userRole.roleId">
-							<option>---select role--</option>
-							<c:forEach items="${roles}" var="item">
-								<option value="${item.key}">${item.value}</option>
-							</c:forEach>
+					<td><select name="userRole.roleId" id="userRole">
+							<option value=''>---select role--</option>
 					</select></td>
 				</tr>
 				<tr>
 					<td>State :</td>
 					<td><select name="state.stateId" id="state">
-							<option>---select state--</option>
-							<c:forEach items="${states}" var="item">
-								<option value="${item.key}">${item.value}</option>
-							</c:forEach>
+							<option value=''>---select state--</option>
+
 					</select></td>
 				</tr>
 
@@ -81,51 +69,60 @@
 					</select></td>
 				</tr>
 				<tr>
-					<td><input type="submit" value="create user"></td>
+					<td><input type="submit" value="submit"/></td>
 				</tr>
 
 			</table>
 
 		</div>
 	</form>
-
-
 	<script type="text/javascript">
-	
- 		
-//  			$('#confirmpasssword').keyup()(function() {
+		function validateForm() {
+			var Id = document.getElementById("userID").value;
+			var userName=document.getElementById("userName").value;
+			var password = document.getElementById("password").value;
+			var sex = document.getElementById("sex").value;
+			
+			var userRole = document.getElementById("userRole").value;
+			var state = document.getElementById("state").value;
+			var district = document.getElementById("district").value;
+			
+			
+			if (Id == null || Id == "" ||userName==null ||userName=="" || password == null || password == ""||userRole == ''||state==''||sex == ''|| district == '')
+			{
+				alert('All Field Should be Filled before  Submitting');
+				return false;
+			} 
+			
 
-//  				var password = $('#password').val();
-//  				var confirmpassword = $('#confirmpasssword').val();
-//  				if (password != confirmpassword) {
-//  					alert("password mismatch");
-//  				}
-//  			});
- 		
+		}
+
 		$('#state').change(
 				function() {
 					var stateID = $('#state').val();
 
 					$.ajax({
-						url : "ajaxforDistrictList",
+						url : "/Admin/ajaxforDistrictList",
 						type : "POST",
 						dataType : "json",
 						data : ({
 							stateID : stateID
 						}),
-						success : function(data) {
+						success : function(response) {
 							$('#district').empty();
 							$('#district').append(
 									$("<option></option>").attr("value", '')
 											.text('Please Select'));
-							$.each(data, function(key, value) {
+							$.each(response, function(key, value) {
 								$('#district').append(
 										$("<option></option>").attr("value",
 												key).text(value));
 							});
 
 						},
-						error : function() {
+						error : function(xhr, err) {
+							alert(err)
+							alert(xhr)
 							alert("Unable to populate dropdownlist");
 
 						}
@@ -133,9 +130,60 @@
 					});
 
 				});
+		$(document)
+				.ready(
+						function() {
+
+							$
+									.ajax({
+
+										url : "/Admin/ajaxForUserRole",
+										type : "GET",
+										dataType : "json",
+										success : function(data) {
+											$.each(data, function(key, value) {
+												$('#userRole').append(
+														$("<option></option>")
+																.attr("value",
+																		key)
+																.text(value));
+											});
+										},
+										error : function() {
+
+											alert("Unable to populate dropdownlist please contact Admin");
+										}
+
+									});
+
+						});
+		
+		
+	$(document).ready(function(){
+		$.ajax({
+	
+
+			url : "/Admin/ajaxForStateList",
+			type : "GET",
+			dataType : "json",
+			success : function(data) {
+
+				$.each(data, function(key, value) {
+
+					$('#state').append(
+							$("<option></option>").attr("value", key).text(
+									value));
+
+				});
+			},
+			error : function() {
+
+				alert("Unable to populate dropdownlist please contact Admin");
+			}
+
+		});
+	});
 	</script>
-
-
 </body>
 
 
